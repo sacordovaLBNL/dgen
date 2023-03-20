@@ -7,3 +7,8 @@ pandas
 psutil
 psycopg2
 sqlalchemy
+pyarrow
+scipy
+requests
+ipdb
+typing-extensions

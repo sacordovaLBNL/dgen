@@ -35,7 +35,9 @@ def get_psql_table_fields(engine, schema, name):
     """
 
     sql = "SELECT column_name FROM information_schema.columns WHERE table_schema = '{}' AND table_name   = '{}'".format(schema, name)
-    return np.concatenate(pd.read_sql_query(sql, engine).values)
+    table_fields = pd.read_sql_query(sqlalchemy.text(sql), con=engine.connect()).values
+
+    return np.concatenate(table_fields)
 
 def df_to_psql(df, engine, schema, owner, name, if_exists='replace', append_transformations=False):
     """
@@ -133,11 +135,11 @@ def df_to_psql(df, engine, schema, owner, name, if_exists='replace', append_tran
         fields = [i.lower() for i in get_psql_table_fields(engine, schema, name)]
         for f in list(set(df.columns.values) - set(fields)):
             sql = "ALTER TABLE {}.{} ADD COLUMN {} {}".format(schema, name, f, sql_type[f])
-            conn.execute(sql)
+            conn.execute(sqlalchemy.text(sql))
         
     df.to_sql(name, engine, schema=schema, index=False, dtype=d_types, if_exists=if_exists)
     sql = 'ALTER TABLE {}."{}" OWNER to "{}"'.format(schema, name, owner)
-    conn.execute(sql)
+    conn.execute(sqlalchemy.text(sql)) 
 
     conn.close()
     engine.dispose() 

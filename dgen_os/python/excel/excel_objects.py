@@ -180,7 +180,7 @@ class FancyNamedRange(object):
             out_df = self.data_frame[columns]
 
         try:
-            out_df.to_csv(s, delimiter = ',', index = index, header = header)
+            out_df.to_csv(s, sep = ',', index = index, header = header)
         except:
             out_df.to_csv(s, index=index, header=header)
         s.seek(0)
@@ -201,8 +201,8 @@ class FancyNamedRange(object):
             cursor.execute(sql)
             connection.commit()
  
-        sql = '{}.{}'.format(schema, table)
-        cursor.copy_from(s, sql, sep = ',', null = '')
+        sql = 'COPY {}.{} FROM STDIN WITH (FORMAT csv)'.format(schema, table)
+        cursor.copy_expert(sql, s)
         connection.commit()    
         
         # release the string io object

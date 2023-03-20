@@ -5,19 +5,18 @@ channels:
   - anaconda
   - nrel
 dependencies:
-  - python=3
+  - python=3.8.16
   - colorama
   - colorlog
   - requests
   - matplotlib
   - numpy
   - openpyxl
-  - pandas=1.1.5
+  - pandas #=1.1.5
   - pyarrow
   - psutil
   - psycopg2
   - scipy
-  - spyder
   - sqlalchemy
   - nrel-pysam 2.1.4
   - nrel-pysam-stubs 2.1.4
